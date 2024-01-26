@@ -8,13 +8,19 @@ jobs:
       with:
         node-version: 21
     - run: npm install
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
     - name: Generate single executable preparation blob
       run: node --experimental-sea-config sea-config.json
     - name: Create copy of node executable
       run: >
         node -e "require('fs').copyFileSync(process.execPath, 'hello.exe')"
     - name: Remove binary signature
-      run: signtool remove /s hello.exe
+      run: |
+        $signtool = "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
+        $signtool remove /s hello.exe
     - name: Inject blob
       run: >
         npx postject hello.exe NODE_SEA_BLOB sea-prep.blob `
