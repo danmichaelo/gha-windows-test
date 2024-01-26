@@ -18,9 +18,10 @@ jobs:
       run: >
         node -e "require('fs').copyFileSync(process.execPath, 'hello.exe')"
     - name: Remove binary signature
-      run: |
-        $signtool = "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
-        $signtool remove /s hello.exe
+      shell: cmd
+      run: >
+        "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
+        remove /s hello.exe
     - name: Inject blob
       run: >
         npx postject hello.exe NODE_SEA_BLOB sea-prep.blob `
